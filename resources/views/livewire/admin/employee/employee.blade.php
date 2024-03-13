@@ -1,4 +1,10 @@
 <div>
+    <style type="text/css">
+        .modal-body{
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+    </style>
     <div class="row mb-2 mb-xl-3">
         <div class="col-auto d-none d-sm-block">
             <h3><strong>{{$lang->data['employee']??'Employee'}}</strong></h3>

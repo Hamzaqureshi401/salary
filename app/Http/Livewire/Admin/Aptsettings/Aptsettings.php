@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class Aptsettings extends Component
 {
-    public $aptsettings,$lessthan39hours,$between39and77hours,$da_rate,$is_active = true,$lang;
+    public $aptsettings,$updateAptsettings,$lessthan39hours,$between39and77hours,$da_rate,$is_active = true,$lang;
     public $between78and116hours,$morethan117hours, $AptSetting;
     /* render the page */
     public function render()
@@ -33,6 +33,7 @@ class Aptsettings extends Component
         $this->between78and116hours = $aptsettings->between78and116hours;
         $this->morethan117hours = $aptsettings->morethan117hours;
         $this->da_rate = $aptsettings->da_rate;
+        $this->updateAptsettings = $aptsettings;
     }
     /* update customer data */
     public function update()
@@ -44,12 +45,13 @@ class Aptsettings extends Component
             'morethan117hours'  => 'required',
             'da_rate'  => 'required'
         ]);
-        $aptsettings = $this->AptSetting;
+        $aptsettings = $this->updateAptsettings;
         $aptsettings->lessthan39hours = $this->lessthan39hours;
         $aptsettings->between39and77hours = $this->between39and77hours;
         $aptsettings->between78and116hours = $this->between78and116hours;
         $aptsettings->morethan117hours = $this->morethan117hours;
         $aptsettings->da_rate=$this->da_rate;
+
         $aptsettings->save();
         $this->emit('closemodal');
         $this->dispatchBrowserEvent(

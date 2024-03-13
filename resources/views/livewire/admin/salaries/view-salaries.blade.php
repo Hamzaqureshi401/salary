@@ -35,38 +35,34 @@
                     </thead>
                     <tbody>
                         @foreach ($assignings as $item)
-                        <tr>
-                            <td>{{$loop->index + 1}}</td>
-                            <td>{{ date('d/m/Y', strtotime($item->salarydate)) }}</td>
-                            <td>{{$item->employee->name}}</td>
-                            <td>
-                                @if ($item->employee->working_nature== 1)
-                                    <span style="font-weight: bold; color: blue;">Monthly Fixed</span>
-                                @else
-                                    <span style="font-weight: bold; color: red;">Hourly</span>
-                                @endif
-                            </td>
+    <tr>
+        <td>{{$loop->index + 1}}</td>
+        <td>{{ date('d/m/Y', strtotime($item->salary_date)) }}</td>
+        <td>{{$item->employee->name}}</td>
+        <td>
+            @if ($item->employee->working_nature == 1)
+                <span style="font-weight: bold; color: blue;">Monthly Fixed</span>
+            @else
+                <span style="font-weight: bold; color: red;">Hourly</span>
+            @endif
+        </td>
+        <td>{{$item->working_hours}}</td>
+        <td>DKK {{ number_format($item->atp_tax, 2, ',', '.') }}</td>
+        <td>DKK {{ number_format($item->am_income, 2, ',', '.') }}</td>
+        <td>DKK {{ number_format($item->am_contributions, 2, ',', '.') }}</td>
+        <td>DKK {{ number_format($item->a_income, 2, ',', '.') }}</td>
+        <td>DKK {{ number_format($item->a_tax, 2, ',', '.') }}</td>
+        <td>DKK {{ number_format($item->driving_allowance, 2, ',', '.') }}</td>
+        <td>DKK {{ number_format($item->net_salary, 2, ',', '.') }}</td>
+        <td>
+            @if(Auth::user()->can('delete_assigning') && Auth::user()->can('edit_assigning'))
+                <a href="#" class="btn btn-success btn-sm" wire:click="salaryslip({{ $item->id }})">{{ $lang->data['delete'] ?? 'Salary Slip' }}</a>
+                <a href="{{ route('admin.edit_assigning', $item->id) }}" class="btn btn-sm btn-primary">{{ $lang->data['edit'] ?? 'Edit' }}</a>
+            @endif
+        </td> 
+    </tr>
+@endforeach
 
-                            <td>{{$item->working_hours}}</td>
-                            <td>DKK {{$item->atp_tax}}</td>
-                            <td>DKK {{$item->am_income}}</td>
-                            <td>DKK {{$item->am_contributions}}</td>
-                            <td>DKK {{$item->a_income}}</td>
-                            <td>DKK {{$item->a_tax}}</td>
-                            <td>DKK {{$item->driving_allowance}}</td>
-                            <td>DKK {{$item->net_salary}}</td>
-         
-                            
-                            
-                            <td>
-                                
-                                @if(Auth::user()->can('delete_assigning')&& (Auth::user()->can('edit_assigning')))
-                                <a href="#" class="btn btn-success btn-sm" wire:click="salaryslip({{ $item->id }})">{{ $lang->data['delete'] ?? 'Salary Slip' }}</a>
-                                <a href="{{route('admin.edit_assigning',$item->id)}}" class="btn btn-sm btn-primary">{{$lang->data['edit'] ?? 'Edit'}}</a>                                @endif
-
-                            </td>
-                        </tr>
-                        @endforeach
                     </tbody>
                 </table>
                 @if(count($assignings) == 0)

@@ -41,11 +41,14 @@
                 
                 <div class="mb-3 col-md-4"><label class="form-label">Employee Nature</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio"  name="nature_monthly" wire:model="nature_monthly" value="1" readonly><label class="form-check-label" for="nature_monthly">Monthly Fixed Salary</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio"  name="nature_hourly" wire:model="nature_hourly" value="0" readonly><label class="form-check-label" for="nature_hourly">Hourly Basis</label>
-                </div>
+    <input class="form-check-input" type="radio" name="nature_monthly" wire:model="nature_monthly" value="1" disabled>
+    <label class="form-check-label" for="nature_monthly">Monthly Fixed Salary</label>
+</div>
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="nature_hourly" wire:model="nature_hourly" value="0" disabled>
+    <label class="form-check-label" for="nature_hourly">Hourly Basis</label>
+</div>
+
                 @error('working_nature')
                 <span class="text-danger">{{$message}}
                     
@@ -54,7 +57,7 @@
             <div class="row">
                  <div class="mb-3 col-md-4">
                     <label class="form-label">Working Hours:</label>
-                    <input type="text" class="form-control" wire:model="working_hours" >
+                    <input type="text" class="form-control" wire:model="working_hours" required>
                 </div>
                 
                 <div class="mb-3 col-md-4">
@@ -73,6 +76,9 @@
             <div class="mb-3 col-md-4">
                     <label class="form-label" for="inputZip">{{$lang->data['amount'] ?? 'Working Hours'}} </label>       
                     <input type="number" class="form-control" wire:model="working_hours" wire:input="salarycalculation">
+                     @error('working_hours')
+                        <span class="text-danger">{{$message}}</span>
+                    @enderror
                 </div>
                 
                 <div class="mb-3 col-md-4">
@@ -125,7 +131,7 @@
             <div class="row">
             <div class="mb-3 col-md-4">
                     <label class="form-label" for="inputZip">{{$lang->data['amount'] ?? 'Traveling Hours in Km.'}} </label>       
-                    <input type="number" class="form-control" wire:model="traveling_hours"  wire:input="salarycalculation">
+                    <input type="number" class="form-control" wire:model="traveling_hours" >
                 </div>
                 
                 <div class="mb-3 col-md-2">

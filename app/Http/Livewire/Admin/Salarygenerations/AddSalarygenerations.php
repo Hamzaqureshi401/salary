@@ -37,22 +37,22 @@ class AddSalarygenerations extends Component
         }
     }
     public function calculateLastDayOfMonth()
-    {
-        $year = date('Y');
-        $month = date('n');
-        $lastDay = date('t', strtotime("last day of $year-$month"));
+{
+    $year = date('Y');
+    $month = date('n');
+    $numDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-        // Loop to find the last working day
-        while (date('N', strtotime("$year-$month-$lastDay")) >= 6) {
-            $lastDay--;
-        }
+    $lastDay = $numDaysInMonth;
 
-        $this->salary_date = "$year-$month-$lastDay";
-
-            // Dump the value for debugging
-            dump($this->salary_date);
-   
+    while (date('N', mktime(0, 0, 0, $month, $lastDay, $year)) >= 6) {
+        $lastDay--;
     }
+
+    // Format the date as 'YYYY-MM-DD'
+    $this->salary_date = date('Y-m-d', mktime(0, 0, 0, $month, $lastDay, $year));
+}
+
+
     /* store products*/
     public function create()
     {
@@ -78,6 +78,12 @@ class AddSalarygenerations extends Component
         ]);
         
         $assigning = new Salarygeneration();
+        $this->a_tax = str_replace(',', '', $this->a_tax);
+        $this->net_salary = str_replace(',', '', $this->net_salary);
+        $this->gross_salary = str_replace(',', '', $this->gross_salary);
+        $this->a_income = str_replace(',', '', $this->a_income);
+        $this->am_income = str_replace(',', '', $this->am_income);
+        
         $assigning->salary_date = $this->salary_date;
         $assigning->employee_id = $this->employee_id;
         $assigning->working_hours = $this->working_hours;
@@ -107,8 +113,10 @@ class AddSalarygenerations extends Component
         return redirect()->route('admin.view_salaries');
     }
         public function salarycalculation(){
+
         $aptSetting = AptSetting::first();    
         $employee = Employee::where('id',$this->employee_id)->first();
+        //dd($this->employee_id , $employee);
         if ($employee->working_nature == 1) {
                 $this->nature_monthly = $employee->working_nature;
                 $this->nature_hourly = null;
@@ -118,11 +126,17 @@ class AddSalarygenerations extends Component
                 $this->calculatefixedsalary($employee);
         
                 } else {
+
                     // Hourly Employee Calculation                    
                     $this->nature_hourly = $employee->working_nature;
                     $this->nature_monthly = null;
                     $this->fixed_salary = $employee->hourly_price;
-                    $this->working_hours = $this->working_hours ?  $this->working_hours : 0;
+                    if($employee->working_nature == 0){
+                        $this->working_hours = null;
+                    }else{
+                        $this->working_hours = $this->working_hours ?  $this->working_hours : 0;
+                    }
+                    
                     // Call calculateHourlySalary to update gross_salary and perform hourly employee calculations
                     $this->calculateHourlySalary($employee);
                 }
@@ -151,13 +165,15 @@ class AddSalarygenerations extends Component
     $aptSetting = AptSetting::first(); 
 
     $this->atp_amount = $this->calculateAtpTax($this->working_hours, $aptSetting);
-    $this->am_income = $this->gross_salary - $this->atp_amount;
+    $am_income = $this->gross_salary - $this->atp_amount;
+    $this->am_income = number_format($am_income,2);
+    $this->gross_salary = number_format($this->gross_salary,2);
 
     // Third step is to calculate the am contribution value & deduct this from am_income
     $this->am_contributions = 8;
-    $this->am_amount = $this->am_income * 0.08;
+    $this->am_amount = $am_income * 0.08;
     //$this->am_amount = number_format($this->am_amount, 2);
-    $this->a_income = $this->am_income - $this->am_amount;
+    $this->a_income = $am_income - $this->am_amount;
 
     // Forth Step is to Calculate the A Tax after deduction value of Monthly Deduction
     $this->personal_deduction = $employee->monthly_deduction;
@@ -172,6 +188,7 @@ class AddSalarygenerations extends Component
     // $this->a_tax = $this->a_income - $this->tax_amount;
     $this->a_tax_numeric = $this->a_income - $this->tax_amount;
     $this->a_tax = number_format($this->a_tax_numeric, 2);
+    $this->a_income = number_format($this->a_income ,2);
 
     // Fifth step is to calculate the driving allowance
     $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
@@ -191,7 +208,7 @@ class AddSalarygenerations extends Component
     $this->working_hours = is_numeric($value) ? (float) $value : 0;
     $employee = Employee::find($this->employee_id);
     // Update gross_salary when working hours are changed
-    $this->gross_salary = $this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours);
+    $this->gross_salary = number_format($this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours),2);
 
     // Recalculate hourly salary when working hours are updated
     $this->calculateHourlySalary($employee);
@@ -203,17 +220,19 @@ public function calculateHourlySalary($employee)
     $aptSetting = AptSetting::first();
 
     // Update the gross_salary calculation here
-    $this->gross_salary = $this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours);
+    $gross_salary = $this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours);
+    $this->gross_salary = number_format($gross_salary,2);
 
 
     $this->atp_amount = $this->calculateAtpTax($this->working_hours, $aptSetting);
-    $this->am_income = $this->gross_salary - $this->atp_amount;
+    $am_income = $gross_salary - $this->atp_amount;
+    $this->am_income = number_format($am_income , 2);
 
     // Third step is to calculate the am contribution value & deduct this from am_income
     $this->am_contributions = 8;
-    $this->am_amount = $this->am_income * 0.08;
+    $this->am_amount = $am_income * 0.08;
     //$this->am_amount = number_format($this->am_amount, 2);
-    $this->a_income = $this->am_income - $this->am_amount;
+    $this->a_income = $am_income - $this->am_amount;
 
     // Forth Step is to Calculate the A Tax after deduction value of Monthly Deduction
     $this->personal_deduction = $employee->monthly_deduction;
@@ -228,6 +247,8 @@ public function calculateHourlySalary($employee)
     // $this->a_tax = $this->a_income - $this->tax_amount;
     $this->a_tax_numeric = $this->a_income - $this->tax_amount;
     $this->a_tax = number_format($this->a_tax_numeric, 2);
+    $this->a_income = number_format($this->a_income ,2);
+
 
     // Fifth step is to calculate the driving allowance
     $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
