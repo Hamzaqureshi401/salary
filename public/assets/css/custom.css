@@ -1,0 +1,34 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.nonveg{
+  filter: brightness(0) saturate(100%) invert(13%) sepia(89%) saturate(5924%) hue-rotate(358deg) brightness(109%) contrast(112%);
+}
+
+.searchdropdown-custom{
+  width:100%
+}
+
+
+.bg-bv{
+  color: #fff;
+  background-color: #8b1cbb;
+}
+
+.bg-completed{
+  background-color: #2106ed;
+  color: #fff;
+}
+
+.fixed-height-custom-status{
+  height: 108px;
+}
