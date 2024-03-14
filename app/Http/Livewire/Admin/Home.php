@@ -2,23 +2,37 @@
 
 namespace App\Http\Livewire\Admin;
 
-//use App\Models\Order;
+use App\Models\Employee;
+use App\Models\Salarygeneration;
 use Carbon\Carbon;
 use Livewire\Component;
 
 class Home extends Component
 {
-    public $latestorders,$pendingorders,$lang;
-    /* render the page */
+    public $currentMonth;
+    public $currentYear;
+    public $currentMonthName;
+    public $employees;
+    public $assignings;
+
     public function render()
     {
-       // $this->latestorders = Order::whereDate('date',Carbon::today())->get();
-        //$this->pendingorders = Order::whereStatus(Order::PENDING)->get();
-        return view('livewire.admin.home');
+       return view('livewire.admin.home');
     }
-    /* process before render */
-    public function mount()
-    {
-        $this->lang = getTranslation();
+    
+    public function mount(){
+        setlocale(LC_TIME, 'en');     
+        $this->getData();
+        $this->employees = Employee::all();
+    }
+
+    public function getData(){
+         $this->currentMonth = Carbon::now()->month;
+         $this->currentYear = Carbon::now()->year;
+         $this->currentMonthName = Carbon::now()->formatLocalized('%B');
+
+         $this->assignings = Salarygeneration::whereMonth('salary_date', $this->currentMonth)
+        ->whereYear('salary_date', $this->currentYear)
+        ->get();
     }
 }
