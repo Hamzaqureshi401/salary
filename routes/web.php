@@ -30,6 +30,7 @@ Route::group(['prefix' => 'admin/', 'middleware' => ['admin','install']], functi
         Route::get('/detailed-report/{id}/{start_date?}/{end_date?}', \App\Http\Livewire\Admin\Reports\DetailedReport::class)->name('admin.detailed_report');
 
        // Route::get('/detailed-report/{id}', [DetailedReport::class, 'getdata'])->name('admin.detailed_report'); 
+        Route::get('/salary-report', \App\Http\Livewire\Admin\Reports\SalaryReport::class)->name('salary.report');
        Route::get('/company-owner-report', \App\Http\Livewire\Admin\Reports\CompanyOwnerReport::class)->name('admin.company_report');
         Route::get('/istamara-report', \App\Http\Livewire\Admin\Reports\SalesReport::class)->name('admin.sales_report');
         Route::get('/busassigning-report', \App\Http\Livewire\Admin\Reports\DaywiseSalesReport::class)->name('admin.daywise_report');

@@ -66,12 +66,12 @@ background-color: #171D3F !important;
                     </a>
                     <ul id="reports" class="sidebar-dropdown list-unstyled collapse {{ Request::is('admin/reports*') ? 'show' : '' }}" data-bs-parent="#sidebar">
                         @if (Auth::user()->can('day_wise_sales_report'))
-                            <li class="sidebar-item {{ Request::is('admin/reports/day-wise*') ? 'active' : '' }} "><a class="sidebar-link" href="{{route('admin.daywise_report')}}">{{$lang->data['day_wise_report']??'Assigned Bus 
+                            <li class="sidebar-item {{ Request::is('admin/reports/salary-report*') ? 'active' : '' }} "><a class="sidebar-link" href="{{route('salary.report')}}">{{$lang->data['day_wise_report']??'Salary Report 
                                     '}}&nbsp;
                                     <span class="aarabic-text"></span>
                                     </a></li>
                         @endif
-                        @if (Auth::user()->can('item_wise_sales_report'))
+                        <!-- @if (Auth::user()->can('item_wise_sales_report'))
                             <li class="sidebar-item {{ Request::is('admin/reports/item-sales*') ? 'active' : '' }} "><a class="sidebar-link" href="{{route('admin.item_sales_report')}}">{{$lang->data['item_wise_report']??'Salary & Petrol
                                      '}}&nbsp;
                                      <span class="arabic-text"></span>
@@ -96,7 +96,7 @@ background-color: #171D3F !important;
                             <li class="sidebar-item {{ Request::is('admin/reports/company-owner-report*') ? 'active' : '' }} "><a class="sidebar-link" href="{{route('admin.company_report')}}">{{$lang->data['customer_report']??'Company Owner '}}&nbsp;
                             <span class="aarabic-text"></span>
                             </a></li>
-                        @endif
+                        @endif -->
                     </ul>
                 </li>
                 @endif
