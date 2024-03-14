@@ -19,25 +19,26 @@
                      @enderror
                   </div>
                   <div class="mb-3 col-md-4">
-                     <label class="form-label" for="inputEmail4">
-                     {{  'Start Date' }}
-                     <span class="text-danger"><strong>*</strong></span>
-                     </label>
-                     <input type="date" class="form-control" wire:model="start_date" wire:change="filerSalary">
-                     @error('start_date')
-                     <span class="text-danger">{{$message}}</span>
-                     @enderror
-                  </div>
-                  <div class="mb-3 col-md-4">
-                     <label class="form-label" for="inputEmail4">
-                     {{  'End Date' }}
-                     <span class="text-danger"><strong>*</strong></span>
-                     </label>
-                     <input type="date" class="form-control" id="lastDay" wire:model="end_date" wire:change="filerSalary">
-                     @error('end_date')
-                     <span class="text-danger">{{$message}}</span>
-                     @enderror
-                  </div>
+                    <label class="form-label" for="inputStartMonth">
+                        {{ 'Start Month' }}
+                        <span class="text-danger"><strong>*</strong></span>
+                    </label>
+                    <input type="month" class="form-control" id="inputStartMonth" wire:model="start_date" wire:change="filerSalary">
+                    @error('start_date')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label class="form-label" for="inputEndMonth">
+                        {{ 'End Month' }}
+                        <span class="text-danger"><strong>*</strong></span>
+                    </label>
+                    <input type="month" class="form-control" id="inputEndMonth" wire:model="end_date" wire:change="filerSalary">
+                    @error('end_date')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                </div>
+
                </div>
             </div>
          </div>

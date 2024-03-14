@@ -39,17 +39,22 @@ class SalaryReport extends Component
 
     public function filerSalary(){
 
-    $this->assignings = Salarygeneration::query()
+        $this->assignings = Salarygeneration::query()
         ->when($this->employee_id, function ($query) {
             return $query->where('employee_id', $this->employee_id);
         })
         ->when($this->start_date, function ($query) {
-            return $query->whereDate('salary_date', '>=', $this->start_date);
+            // Set the start date to the first day of the selected month
+            $startDate = Carbon::parse($this->start_date)->startOfMonth();
+            return $query->where('salary_date', '>=', $startDate);
         })
         ->when($this->end_date, function ($query) {
-            return $query->whereDate('salary_date', '<=', $this->end_date);
+            // Set the end date to the last day of the selected month
+            $endDate = Carbon::parse($this->end_date)->endOfMonth();
+            return $query->where('salary_date', '<=', $endDate);
         })
         ->get();
-}
+    }
+
 
 }
