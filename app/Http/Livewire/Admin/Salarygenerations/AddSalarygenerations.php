@@ -117,6 +117,12 @@ class AddSalarygenerations extends Component
     
         return redirect()->route('admin.view_salaries');
     }
+    public function changeType(){
+
+        $this->salarycalculation();
+        $this->traveling_hours = 0;
+        $this->calculateDrivingAllowence();
+    }
         public function salarycalculation(){
 
         $aptSetting = AptSetting::first();    
@@ -284,8 +290,10 @@ public function calculateDrivingAllowence(){
     $aptSetting = AptSetting::first();
      $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
     $this->da_rate = $aptSetting->da_rate;
-    $this->driving_allowance = number_format($this->traveling_hours * $this->da_rate , 2);
+    $driving_allowance = $this->traveling_hours * $this->da_rate;
+    $this->driving_allowance = number_format($driving_allowance , 2);
+
     $this->traveling_hours = ltrim($this->traveling_hours, '0');
-     $this->net_salary = number_format($this->a_tax_numeric + $this->driving_allowance, 2);
+     $this->net_salary = number_format($this->a_tax_numeric + $driving_allowance, 2);
 }
 }

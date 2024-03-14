@@ -28,7 +28,7 @@
 
                 <div class="mb-3 col-md-4">
                     <label class="form-label">{{$lang->data['employee'] ?? 'Select a Employee '}}<span class="text-danger"><strong>*</strong></span></label>
-                    <select class="form-control" wire:change="salarycalculation" wire:model="employee_id">
+                    <select class="form-control" wire:change="changeType" wire:model="employee_id">
                         <option selected value="">{{$lang->data['choose'] ?? 'Choose...'}}</option>
                         @foreach ($employees as $item)
                             <option value="{{$item->id}}">{{$item->name}} </option>
