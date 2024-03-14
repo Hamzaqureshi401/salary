@@ -29,7 +29,7 @@ class AddSalarygenerations extends Component
     {
         $this->calculateLastDayOfMonth();
         $this->employees = Employee::all();
-        $this->traveling_hours = 0;
+        //$this->traveling_hours = 0;
         
         if(!Auth::user()->can('add_assigning'))
         {
@@ -83,6 +83,11 @@ class AddSalarygenerations extends Component
         $this->gross_salary = str_replace(',', '', $this->gross_salary);
         $this->a_income = str_replace(',', '', $this->a_income);
         $this->am_income = str_replace(',', '', $this->am_income);
+        $this->driving_allowance = str_replace(',', '', $this->driving_allowance);
+        $this->tax_base = str_replace(',', '', $this->tax_base);
+        $this->tax_amount = str_replace(',', '', $this->tax_amount);
+        $this->am_amount = str_replace(',', '', $this->am_amount);
+
         
         $assigning->salary_date = $this->salary_date;
         $assigning->employee_id = $this->employee_id;
@@ -140,6 +145,11 @@ class AddSalarygenerations extends Component
                     // Call calculateHourlySalary to update gross_salary and perform hourly employee calculations
                     $this->calculateHourlySalary($employee);
                 }
+    $this->tax_base = number_format(floatval($this->tax_base), 2);
+
+$this->tax_amount = number_format(floatval($this->tax_amount), 2);
+
+    
                 
     }
     private function calculateAtpTax($workingHours, $atpSetting)
@@ -189,6 +199,7 @@ class AddSalarygenerations extends Component
     $this->a_tax_numeric = $this->a_income - $this->tax_amount;
     $this->a_tax = number_format($this->a_tax_numeric, 2);
     $this->a_income = number_format($this->a_income ,2);
+    $this->am_amount = number_format($this->am_amount ,2);
 
     // Fifth step is to calculate the driving allowance
     $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
@@ -262,6 +273,19 @@ public function calculateHourlySalary($employee)
         $this->net_salary = 0; // Adjust this based on your specific logic
     }
 
+    $this->tax_base = number_format($this->tax_base , 2);
+    $this->tax_amount = number_format($this->tax_amount , 2);
+    $this->am_amount = number_format($this->am_amount ,2);
+
+
 }
 
+public function calculateDrivingAllowence(){
+    $aptSetting = AptSetting::first();
+     $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
+    $this->da_rate = $aptSetting->da_rate;
+    $this->driving_allowance = number_format($this->traveling_hours * $this->da_rate , 2);
+    $this->traveling_hours = ltrim($this->traveling_hours, '0');
+     $this->net_salary = number_format($this->a_tax_numeric + $this->driving_allowance, 2);
+}
 }

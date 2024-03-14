@@ -131,7 +131,7 @@
             <div class="row">
             <div class="mb-3 col-md-4">
                     <label class="form-label" for="inputZip">{{$lang->data['amount'] ?? 'Traveling Hours in Km.'}} </label>       
-                    <input type="number" class="form-control" wire:model="traveling_hours" >
+                    <input type="number" class="form-control" wire:model="traveling_hours" wire:input="calculateDrivingAllowence">
                 </div>
                 
                 <div class="mb-3 col-md-2">
