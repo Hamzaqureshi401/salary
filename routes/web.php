@@ -66,6 +66,7 @@ Route::group(['prefix' => 'admin/', 'middleware' => ['admin','install']], functi
     Route::get('/Salarygeneration/view', \App\Http\Livewire\Admin\Salarygenerations\ViewSalarygenerations::class)->name('admin.view_salaries');
     Route::get('/Salarygeneration/add', \App\Http\Livewire\Admin\Salarygenerations\AddSalarygenerations::class)->name('admin.add_salaries');
     Route::get('/Salarygeneration/edit/{id}', \App\Http\Livewire\Admin\Salarygenerations\EditSalarygenerations::class)->name('admin.edit_salaries');
+    Route::get('/admin/salaries/{id}', \App\Http\Livewire\Admin\Salaries\SalaryView::class)->name('admin.salaries.view');
 
 });
 
