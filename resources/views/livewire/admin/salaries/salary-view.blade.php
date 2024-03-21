@@ -38,24 +38,35 @@
 
     /* Styles for printing */
     @media print {
-        body {-webkit-print-color-adjust: exact;}
-        body {
-    visibility: hidden;
-  }
-  .salary-slip {
-    visibility: visible;
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
+      body {
+          -webkit-print-color-adjust: exact;
+          color-adjust: exact; /*firefox & IE */
+          visibility: hidden;
+      }
+        
+      .salary-slip {
+          visibility: visible;
+          position: absolute;
+          left: 0;
+          top: 0;
+      }
       .bg-silver,
       .pd strong,
       .border-t-b,
       .border-t {
         color: black !important; /* Ensure colors are visible when printing */
       }
-      
+      .table td {
+            font-size: 10px; /* Adjust the font size as needed */
+        }
 
+      .sm-f {
+        padding-top: 3px;
+          padding-bottom: 3px;
+      }
+        .mb-4 {
+          margin-bottom: 0.5rem !important;
+      }
     }
   </style>
 </head>
@@ -81,12 +92,12 @@
       <div class="col-6"></div>
       <div class="col-3">
         <div class="row">
-          <div class="col-12"><strong>Firma: 2H DaTa ApS</strong></div>
+          <div class="col-12"><strong>Firma: {{getStoreName()}}</strong></div>
           <div class="col-12"><strong>CVR. Nr.: DK 3909 3308</strong></div>
         </div>
       </div>
     </div>
-    <div class="row bg-silver pd-t-b">
+    <div class="row bg-silver pd-t-b sm-f">
       <div class="col-4">
         <div class="row">
           <div class="col-12"><strong>LØNPERIODE</strong></div>
@@ -108,8 +119,8 @@
     </div>
     <div class="row pd">
       <div class="col-3">Gage</div>
-      <div class="col-3 text-center">82 Timer af</div>
-      <div class="col-3 text-center">110,00 kr.</div>
+      <div class="col-3 text-center">{{ $record->working_hours}} Timer af</div>
+      <div class="col-3 text-center">{{ number_format($record->hourly_rate, 2, ',', '.') }} kr.</div>
       <div class="col-3 text-end">{{ number_format($record->hourly_gross_salary, 2, ',', '.') }} kr.</div>
       <div class="col-6">ATP</div>
       <div class="col-6 text-end">{{ number_format($record->atp_tax, 2, ',', '.') }} kr.</div>
@@ -130,7 +141,7 @@
     </div>
     <div class="row pd-l-r mb-4">
       <div class="col-4">A-skattepligtig indkomst</div>
-      <div class="col-4 text-end">{{ number_format($record->tax_base, 2, ',', '.') }} kr.</div>
+      <div class="col-4 text-end">{{ number_format($record->a_income, 2, ',', '.') }} kr.</div>
       <div class="col-4"></div>
       <div class="col-4">Personligt fradrag:</div>
       <div class="col-4 text-end">{{ number_format($record->personal_deduction, 2, ',', '.') }} kr.</div>
@@ -143,16 +154,16 @@
       <div class="col-4"></div>
     </div>
     <div class="row pd-l-r mb-4">
-      <div class="col-3">AM-bidrag:</div>
-      <div class="col-3 text-center">{{ $record->am_contributions }} % af</div>
-      <div class="col-3 text-center">{{ number_format($record->am_income, 2, ',', '.') }} kr.</div>
-      <div class="col-3 text-end">{{ number_format($record->am_tax, 2, ',', '.') }} kr.</div>
+      <div class="col-3">A-Skat:</div>
+      <div class="col-3 text-center">{{ $record->draw_percentage }} % af</div>
+      <div class="col-3 text-center">{{ number_format($record->tax_base, 2, ',', '.') }} kr.</div>
+      <div class="col-3 text-end">{{ number_format($record->tax_amount, 2, ',', '.') }} kr.</div>
     </div>
     <div class="row pd-l-r mb-4">
-      <div class="col-3">AM-bidrag:</div>
-      <div class="col-3 text-center">{{ $record->am_contributions }} % af</div>
-      <div class="col-3 text-center">{{ number_format($record->am_income, 2, ',', '.') }} kr.</div>
-      <div class="col-3 text-end">{{ number_format($record->am_tax, 2, ',', '.') }} kr.</div>
+      <div class="col-3">Kørselgodtgørelse:</div>
+      <div class="col-3 text-center">{{ $record->traveling_hours }} % kmaf</div>
+      <div class="col-3 text-center">{{ number_format($record->da_rate, 2, ',', '.') }} kr.</div>
+      <div class="col-3 text-end">{{ number_format($record->driving_allowance, 2, ',', '.') }} kr.</div>
     </div>
     <div class="row pd-l-r mb-4 bg-silver">
       <div class="col-6"><strong>Nettoløn til udbetaling:</strong></div>
@@ -171,9 +182,39 @@
             </thead>
             <tbody>
               <tr>
-                <td class="col-4">{{ date('M-y', strtotime($record->salary_date)) }}</td>
-                <td class="col-4 text-center">{{ date('d-m-Y', strtotime($record->salary_date)) }}</td>
-                <td class="col-4 text-end">{{ number_format($record->net_salary, 2, ',', '.') }} kr.</td>
+                <td class="col-4">AM Indkomst</td>
+                <td class="col-4 text-center">{{ number_format($record->am_income, 2, ',', '.') }}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_am_income, 2, ',', '.') }}</td>
+              </tr>
+              <tr>
+                <td class="col-4">A-indkomst</td>
+                <td class="col-4 text-center">{{ number_format($record->a_income, 2, ',', '.') }}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_a_income, 2, ',', '.') }}</td>
+              </tr>
+              <tr>
+                <td class="col-4">A-Skat</td>
+                <td class="col-4 text-center">{{ number_format($record->tax_amount, 2, ',', '.') }}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_a_tax, 2, ',', '.') }}</td>
+              </tr>
+              <tr>
+                <td class="col-4">AM-bidrag</td>
+                <td class="col-4 text-center">{{ number_format($record->am_tax, 2, ',', '.') }}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_am_contributions, 2, ',', '.') }}</td>
+              </tr>
+              <tr>
+                  <tr>
+                <td class="col-4">ATP</td>
+                <td class="col-4 text-center">{{ number_format($record->atp_tax, 2, ',', '.') }}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_atp_taxl, 2, ',', '.') }}</td>
+              </tr>
+              <tr>
+                <td class="col-4">Kørselgodtgørelse</td>
+                <td class="col-4 text-center">{{ number_format($record->driving_allowance, 2, ',', '.') }}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_driving_allowance, 2, ',', '.') }}</td>
+              </tr>
+                <td class="col-4">Arbejdstimer</td>
+                <td align=right; class="col-4 text-center">{{ $record->working_hours}}</td>
+                <td class="col-4 text-end">{{  number_format($salarySummary->total_working_hours, 2, ',', '.') }}</td>
               </tr>
               <!-- Add more rows as needed -->
             </tbody>

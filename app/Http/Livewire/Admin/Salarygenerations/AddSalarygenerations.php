@@ -283,6 +283,21 @@ public function calculateHourlySalary($employee)
     $this->tax_amount = number_format($this->tax_amount , 2);
     $this->am_amount = number_format($this->am_amount ,2);
 
+    $a_income = str_replace(',', '', $this->a_income);
+
+    if($this->personal_deduction > $a_income){
+
+        $tax_base = 0.00;
+        $tax_amount = 0.00;
+        $a_tax = str_replace(',', '', $a_income);
+
+    
+    }
+    $this->a_income = number_format(round($a_income),2);
+    $this->a_tax = number_format(round($a_tax ?? str_replace(',', '', $this->a_tax)),2);
+    $this->tax_base = number_format(round($tax_base ?? str_replace(',', '', $this->tax_base)),2);
+    $this->tax_amount = number_format(round($tax_amount ?? str_replace(',', '', $this->tax_amount)),2);
+    
 
 }
 
