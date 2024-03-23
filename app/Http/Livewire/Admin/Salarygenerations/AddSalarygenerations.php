@@ -19,6 +19,8 @@ class AddSalarygenerations extends Component
     public $aptTax, $am_contributions, $fixed_salary,$lastDay,$working_nature,$a_tax,$traveling_hours,$employee;
     public $driving_allowance,$net_salary,$a_tax_numeric,$nature_hourly, $nature_monthly,$draw_percentage,$da_rate,$final_salary;
     public $showNotification = false;
+    public $isReadOnly = false;
+
     /* render the page */
     public function render()
      {
@@ -35,22 +37,23 @@ class AddSalarygenerations extends Component
         {
             abort(404);
         }
+
     }
-    public function calculateLastDayOfMonth()
-{
-    $year = date('Y');
-    $month = date('n');
-    $numDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    public function calculateLastDayOfMonth(){
 
-    $lastDay = $numDaysInMonth;
+        $year = date('Y');
+        $month = date('n');
+        $numDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-    while (date('N', mktime(0, 0, 0, $month, $lastDay, $year)) >= 6) {
-        $lastDay--;
+        $lastDay = $numDaysInMonth;
+
+        while (date('N', mktime(0, 0, 0, $month, $lastDay, $year)) >= 6) {
+            $lastDay--;
+        }
+
+        // Format the date as 'YYYY-MM-DD'
+        $this->salary_date = date('Y-m-d', mktime(0, 0, 0, $month, $lastDay, $year));
     }
-
-    // Format the date as 'YYYY-MM-DD'
-    $this->salary_date = date('Y-m-d', mktime(0, 0, 0, $month, $lastDay, $year));
-}
 
 
     /* store products*/
@@ -123,7 +126,8 @@ class AddSalarygenerations extends Component
         $this->traveling_hours = 0;
         $this->calculateDrivingAllowence();
     }
-        public function salarycalculation(){
+    public function salarycalculation(){
+        $this->isReadOnly = false;    
 
         $aptSetting = AptSetting::first();    
         $employee = Employee::where('id',$this->employee_id)->first();
@@ -151,9 +155,8 @@ class AddSalarygenerations extends Component
                     // Call calculateHourlySalary to update gross_salary and perform hourly employee calculations
                     $this->calculateHourlySalary($employee);
                 }
-    $this->tax_base = number_format(floatval($this->tax_base), 2);
-
-$this->tax_amount = number_format(floatval($this->tax_amount), 2);
+        $this->tax_base = number_format(floatval($this->tax_base), 2);
+        $this->tax_amount = number_format(round(floatval($this->tax_amount)), 2);
 
     
                 
@@ -176,139 +179,140 @@ $this->tax_amount = number_format(floatval($this->tax_amount), 2);
     }
 
 
-    public function calculatefixedsalary($employee)
-{
-    $aptSetting = AptSetting::first(); 
+    public function calculatefixedsalary($employee){
 
-    $this->atp_amount = $this->calculateAtpTax($this->working_hours, $aptSetting);
-    $am_income = $this->gross_salary - $this->atp_amount;
-    $this->am_income = number_format($am_income,2);
-    $this->gross_salary = number_format($this->gross_salary,2);
+        $this->isReadOnly = !$this->isReadOnly;    
+        $aptSetting = AptSetting::first(); 
 
-    // Third step is to calculate the am contribution value & deduct this from am_income
-    $this->am_contributions = 8;
-    $this->am_amount = $am_income * 0.08;
-    //$this->am_amount = number_format($this->am_amount, 2);
-    $this->a_income = $am_income - $this->am_amount;
+        $this->atp_amount = $this->calculateAtpTax($this->working_hours, $aptSetting);
+        $am_income = $this->gross_salary - $this->atp_amount;
+        $this->am_income = number_format($am_income,2);
+        $this->gross_salary = number_format($this->gross_salary,2);
 
-    // Forth Step is to Calculate the A Tax after deduction value of Monthly Deduction
-    $this->personal_deduction = $employee->monthly_deduction;
-    $this->tax_base = $this->a_income - $this->personal_deduction;
+        // Third step is to calculate the am contribution value & deduct this from am_income
+        $this->am_contributions = 8;
+        $this->am_amount = $am_income * 0.08;
+        //$this->am_amount = number_format($this->am_amount, 2);
+        $this->a_income = $am_income - $this->am_amount;
 
-    // $this->tax_base = number_format($this->tax_base, 2);
+        // Forth Step is to Calculate the A Tax after deduction value of Monthly Deduction
+        $this->personal_deduction = $employee->monthly_deduction;
+        $this->tax_base = $this->a_income - $this->personal_deduction;
 
-    $this->draw_percentage = $employee->draw_percentage;
-    $this->tax_base = is_numeric($this->tax_base) ? $this->tax_base : 0;
-    $this->tax_amount = $this->tax_base * $this->draw_percentage / 100;
-    //$this->tax_amount = number_format($this->tax_amount, 2);
-    // $this->a_tax = $this->a_income - $this->tax_amount;
-    $this->a_tax_numeric = $this->a_income - $this->tax_amount;
-    $this->a_tax = number_format($this->a_tax_numeric, 2);
-    $this->a_income = number_format($this->a_income ,2);
-    $this->am_amount = number_format($this->am_amount ,2);
+        // $this->tax_base = number_format($this->tax_base, 2);
 
-    // Fifth step is to calculate the driving allowance
-    $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
-    $this->da_rate = $aptSetting->da_rate;
-    $this->driving_allowance = $this->traveling_hours * $this->da_rate;
+        $this->draw_percentage = $employee->draw_percentage;
+        $this->tax_base = is_numeric($this->tax_base) ? $this->tax_base : 0;
+        $this->tax_amount = $this->tax_base * $this->draw_percentage / 100;
+        //$this->tax_amount = number_format($this->tax_amount, 2);
+        // $this->a_tax = $this->a_income - $this->tax_amount;
+        $this->a_tax_numeric = $this->a_income - $this->tax_amount;
+        $this->a_tax = number_format(round($this->a_tax_numeric), 2);
+        $this->a_income = number_format($this->a_income ,2);
+        $this->am_amount = number_format($this->am_amount ,2);
 
-    // Finally Net Salary Completion
-    if (is_numeric($this->a_tax_numeric) && is_numeric($this->driving_allowance)) {
-        $this->net_salary = number_format($this->a_tax_numeric + $this->driving_allowance, 2);
-    } else {
-        $this->net_salary = 0; // Adjust this based on your specific logic
-    }
-}
+        // Fifth step is to calculate the driving allowance
+        $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
+        $this->da_rate = $aptSetting->da_rate;
+        $this->driving_allowance = $this->traveling_hours * $this->da_rate;
 
-    public function updatedWorkingHours($value)
-{
-    $this->working_hours = is_numeric($value) ? (float) $value : 0;
-    $employee = Employee::find($this->employee_id);
-    // Update gross_salary when working hours are changed
-    $this->gross_salary = number_format($this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours),2);
-
-    // Recalculate hourly salary when working hours are updated
-    $this->calculateHourlySalary($employee);
-}
-
-
-public function calculateHourlySalary($employee)
-{
-    $aptSetting = AptSetting::first();
-
-    // Update the gross_salary calculation here
-    $gross_salary = $this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours);
-    $this->gross_salary = number_format($gross_salary,2);
-
-
-    $this->atp_amount = $this->calculateAtpTax($this->working_hours, $aptSetting);
-    $am_income = $gross_salary - $this->atp_amount;
-    $this->am_income = number_format($am_income , 2);
-
-    // Third step is to calculate the am contribution value & deduct this from am_income
-    $this->am_contributions = 8;
-    $this->am_amount = $am_income * 0.08;
-    //$this->am_amount = number_format($this->am_amount, 2);
-    $this->a_income = $am_income - $this->am_amount;
-
-    // Forth Step is to Calculate the A Tax after deduction value of Monthly Deduction
-    $this->personal_deduction = $employee->monthly_deduction;
-    $this->tax_base = $this->a_income - $this->personal_deduction;
-
-    // $this->tax_base = number_format($this->tax_base, 2);
-
-    $this->draw_percentage = $employee->draw_percentage;
-    $this->tax_base = is_numeric($this->tax_base) ? $this->tax_base : 0;
-    $this->tax_amount = $this->tax_base * $this->draw_percentage / 100;
-    //$this->tax_amount = number_format($this->tax_amount, 2);
-    // $this->a_tax = $this->a_income - $this->tax_amount;
-    $this->a_tax_numeric = $this->a_income - $this->tax_amount;
-    $this->a_tax = number_format($this->a_tax_numeric, 2);
-    $this->a_income = number_format($this->a_income ,2);
-
-
-    // Fifth step is to calculate the driving allowance
-    $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
-    $this->da_rate = $aptSetting->da_rate;
-    $this->driving_allowance = $this->traveling_hours * $this->da_rate;
-
-    // Finally Net Salary Completion
-    if (is_numeric($this->a_tax_numeric) && is_numeric($this->driving_allowance)) {
-        $this->net_salary = number_format($this->a_tax_numeric + $this->driving_allowance, 2);
-    } else {
-        $this->net_salary = 0; // Adjust this based on your specific logic
+        // Finally Net Salary Completion
+        if (is_numeric($this->a_tax_numeric) && is_numeric($this->driving_allowance)) {
+            $this->net_salary = number_format($this->a_tax_numeric + $this->driving_allowance, 2);
+        } else {
+            $this->net_salary = 0; // Adjust this based on your specific logic
+        }
     }
 
-    $this->tax_base = number_format($this->tax_base , 2);
-    $this->tax_amount = number_format($this->tax_amount , 2);
-    $this->am_amount = number_format($this->am_amount ,2);
+    public function updatedWorkingHours($value){
 
-    $a_income = str_replace(',', '', $this->a_income);
+        $this->working_hours = is_numeric($value) ? (float) $value : 0;
+        $employee = Employee::find($this->employee_id);
+        // Update gross_salary when working hours are changed
+        $this->gross_salary = number_format($this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours),2);
 
-    if($this->personal_deduction > $a_income){
-
-        $tax_base = 0.00;
-        $tax_amount = 0.00;
-        $a_tax = str_replace(',', '', $a_income);
-
-    
+        // Recalculate hourly salary when working hours are updated
+        $this->calculateHourlySalary($employee);
     }
-    $this->a_income = number_format(round($a_income),2);
-    $this->a_tax = number_format(round($a_tax ?? str_replace(',', '', $this->a_tax)),2);
-    $this->tax_base = number_format(round($tax_base ?? str_replace(',', '', $this->tax_base)),2);
-    $this->tax_amount = number_format(round($tax_amount ?? str_replace(',', '', $this->tax_amount)),2);
-    
 
-}
 
-public function calculateDrivingAllowence(){
-    $aptSetting = AptSetting::first();
-     $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
-    $this->da_rate = $aptSetting->da_rate;
-    $driving_allowance = $this->traveling_hours * $this->da_rate;
-    $this->driving_allowance = number_format($driving_allowance , 2);
+    public function calculateHourlySalary($employee)
+    {
+        $aptSetting = AptSetting::first();
 
-    $this->traveling_hours = ltrim($this->traveling_hours, '0');
-     $this->net_salary = number_format($this->a_tax_numeric + $driving_allowance, 2);
-}
+        // Update the gross_salary calculation here
+        $gross_salary = $this->calculateHourlyGrossSalary($employee->hourly_price, $this->working_hours);
+        $this->gross_salary = number_format($gross_salary,2);
+
+
+        $this->atp_amount = $this->calculateAtpTax($this->working_hours, $aptSetting);
+        $am_income = $gross_salary - $this->atp_amount;
+        $this->am_income = number_format($am_income , 2);
+
+        // Third step is to calculate the am contribution value & deduct this from am_income
+        $this->am_contributions = 8;
+        $this->am_amount = $am_income * 0.08;
+        //$this->am_amount = number_format($this->am_amount, 2);
+        $this->a_income = $am_income - $this->am_amount;
+
+        // Forth Step is to Calculate the A Tax after deduction value of Monthly Deduction
+        $this->personal_deduction = $employee->monthly_deduction;
+        $this->tax_base = $this->a_income - $this->personal_deduction;
+
+        // $this->tax_base = number_format($this->tax_base, 2);
+
+        $this->draw_percentage = $employee->draw_percentage;
+        $this->tax_base = is_numeric($this->tax_base) ? $this->tax_base : 0;
+        $this->tax_amount = $this->tax_base * $this->draw_percentage / 100;
+        //$this->tax_amount = number_format($this->tax_amount, 2);
+        // $this->a_tax = $this->a_income - $this->tax_amount;
+        $this->a_tax_numeric = $this->a_income - $this->tax_amount;
+        $this->a_tax = number_format($this->a_tax_numeric, 2);
+        $this->a_income = number_format($this->a_income ,2);
+
+
+        // Fifth step is to calculate the driving allowance
+        $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
+        $this->da_rate = $aptSetting->da_rate;
+        $this->driving_allowance = $this->traveling_hours * $this->da_rate;
+
+        // Finally Net Salary Completion
+        if (is_numeric($this->a_tax_numeric) && is_numeric($this->driving_allowance)) {
+            $this->net_salary = number_format($this->a_tax_numeric + $this->driving_allowance, 2);
+        } else {
+            $this->net_salary = 0; // Adjust this based on your specific logic
+        }
+
+        $this->tax_base = number_format($this->tax_base , 2);
+        $this->tax_amount = number_format($this->tax_amount , 2);
+        $this->am_amount = number_format($this->am_amount ,2);
+
+        $a_income = str_replace(',', '', $this->a_income);
+
+        if($this->personal_deduction > $a_income){
+
+            $tax_base = 0.00;
+            $tax_amount = 0.00;
+            $a_tax = str_replace(',', '', $a_income);
+
+        
+        }
+        $this->a_income = number_format(round($a_income),2);
+        $this->a_tax = number_format(round($a_tax ?? str_replace(',', '', $this->a_tax)),2);
+        $this->tax_base = number_format(round($tax_base ?? str_replace(',', '', $this->tax_base)),2);
+        $this->tax_amount = number_format(round($tax_amount ?? str_replace(',', '', $this->tax_amount)),2);
+        
+
+    }
+
+    public function calculateDrivingAllowence(){
+        $aptSetting = AptSetting::first();
+         $this->traveling_hours = is_numeric($this->traveling_hours) ? $this->traveling_hours : 0;
+        $this->da_rate = $aptSetting->da_rate;
+        $driving_allowance = $this->traveling_hours * $this->da_rate;
+        $this->driving_allowance = number_format($driving_allowance , 2);
+
+        $this->traveling_hours = ltrim($this->traveling_hours, '0');
+         $this->net_salary = number_format($this->a_tax_numeric + $driving_allowance, 2);
+    }
 }

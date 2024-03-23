@@ -57,7 +57,7 @@
             <div class="row">
                  <div class="mb-3 col-md-4">
                     <label class="form-label">Working Hours:</label>
-                    <input type="text" class="form-control" wire:model="working_hours" required>
+                    <input type="text" class="form-control" wire:model="working_hours" @if($isReadOnly == "true") disabled @endif>
                 </div>
                 
                 <div class="mb-3 col-md-4">
@@ -69,13 +69,13 @@
                 </div>
                 <div class="mb-3 col-md-4">
                     <label class="form-label">Gross Salary:</label>
-                    <input type="text" class="form-control" wire:model="gross_salary" readonly>
+                    <input type="text" class="form-control" wire:model="gross_salary" >
                 </div>
             </div>
             <div class="row">
             <div class="mb-3 col-md-4">
                     <label class="form-label" for="inputZip">{{$lang->data['amount'] ?? 'Working Hours'}} </label>       
-                    <input type="number" class="form-control" wire:model="working_hours" wire:input="salarycalculation">
+                    <input type="number" class="form-control" wire:model="working_hours" wire:input="salarycalculation" @if($isReadOnly == "true") disabled @endif>
                      @error('working_hours')
                         <span class="text-danger">{{$message}}</span>
                     @enderror
