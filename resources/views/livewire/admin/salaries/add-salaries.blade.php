@@ -5,9 +5,7 @@
         <h3><strong>{{$lang->data['create_maintainance'] ?? 'Generate Salaries'}}</strong></h3>
     </div>
 
-    <div class="col-auto ms-auto text-end mt-n1">
-        <a href="{{route('admin.add_assigning')}}" class="btn btn-dark">{{$lang->data['back'] ?? 'Back'}}</a>
-    </div>
+    
 </div>
 
 
