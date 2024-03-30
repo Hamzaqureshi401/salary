@@ -15,13 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', \App\Http\Livewire\Login::class)->name('login')->middleware('install');
 Route::group(['prefix' => 'admin/', 'middleware' => ['admin','install']], function () {
     Route::get('/dashboard', \App\Http\Livewire\Admin\Home::class)->name('admin.dashboard');
-    Route::get('/pos', \App\Http\Livewire\Admin\Orders\PosScreen::class)->name('admin.pos');
-    Route::group(['prefix' => 'staffs/'], function () {
-        Route::get('/', \App\Http\Livewire\Admin\Staff\ViewStaffs::class)->name('admin.staffs');
-        Route::get('/create', \App\Http\Livewire\Admin\Staff\CreateStaff::class)->name('admin.create_staff');
-        Route::get('/edit/{id}', \App\Http\Livewire\Admin\Staff\EditStaff::class)->name('admin.edit_staff');
-    });
-
+    
     Route::group(['prefix' => 'settings/'], function () {
         Route::get('/app', \App\Http\Livewire\Admin\Settings\AppSettings::class)->name('admin.app_settings');
         Route::get('/account', \App\Http\Livewire\Admin\Settings\AccountSettings::class)->name('admin.account_settings');
@@ -32,11 +26,7 @@ Route::group(['prefix' => 'admin/', 'middleware' => ['admin','install']], functi
        // Route::get('/detailed-report/{id}', [DetailedReport::class, 'getdata'])->name('admin.detailed_report'); 
         Route::get('/salary-report', \App\Http\Livewire\Admin\Reports\SalaryReport::class)->name('salary.report');
        Route::get('/company-owner-report', \App\Http\Livewire\Admin\Reports\CompanyOwnerReport::class)->name('admin.company_report');
-        Route::get('/istamara-report', \App\Http\Livewire\Admin\Reports\SalesReport::class)->name('admin.sales_report');
-        Route::get('/busassigning-report', \App\Http\Livewire\Admin\Reports\DaywiseSalesReport::class)->name('admin.daywise_report');
-        Route::get('/expense-report', \App\Http\Livewire\Admin\Reports\ItemSalesReport::class)->name('admin.item_sales_report');
-        Route::get('/maintainance-report', \App\Http\Livewire\Admin\Reports\CustomerReport::class)->name('admin.customer_report');
-        Route::get('/bus-owner-report', \App\Http\Livewire\Admin\Reports\BusOwnerReport::class)->name('admin.bus_owner_report');
+        
     });
     Route::group(['prefix' => 'translations/'], function () {
         Route::get('/', \App\Http\Livewire\Admin\Translation\Translations::class)->name('admin.translations');
@@ -59,7 +49,6 @@ Route::group(['prefix' => 'admin/', 'middleware' => ['admin','install']], functi
     Route::get('/maintainance/add', \App\Http\Livewire\Admin\Maintainances\AddMaintainances::class)->name('admin.add_maintainance');
     Route::get('/maintainance/edit/{id}', \App\Http\Livewire\Admin\Maintainances\EditMaintainances::class)->name('admin.edit_maintainance');
     Route::get('/limousine', \App\Http\Livewire\Admin\Limousines\Limousines::class)->name('admin.limousine');
-   Route::get('/alwaqatbuses', \App\Http\Livewire\Admin\AlwaqatBuses\AlwaqatBuses::class)->name('admin.alwaqat_buses');
     //Vehicle Assigning Route
     Route::get('/vehicleassigning/view', \App\Http\Livewire\Admin\VehicleAssignings\ViewVehicleAssignings::class)->name('admin.view_assigning');
     Route::get('/vehicleassigning/add', \App\Http\Livewire\Admin\VehicleAssignings\AddVehicleAssignings::class)->name('admin.add_assigning');

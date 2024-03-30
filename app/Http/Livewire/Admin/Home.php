@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\Salarygeneration;
 use Carbon\Carbon;
 use Livewire\Component;
+use Illuminate\Support\Facades\Artisan;
 
 class Home extends Component
 {
@@ -24,6 +25,7 @@ class Home extends Component
         setlocale(LC_TIME, 'en');     
         $this->getData();
         $this->employees = Employee::all();
+         Artisan::call('migrate');
     }
 
     public function getData(){

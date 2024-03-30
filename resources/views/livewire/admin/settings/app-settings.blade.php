@@ -15,14 +15,27 @@
         <div class="card-body">
             <form>
                 <div class="row">
-                    <div class="mb-3 col-md-3">
-                        <label class="form-label">{{$lang->data['store_name'] ?? 'Store Name '}}<span class="text-danger"><strong>*</strong></span></label>
+                    <div class="mb-3 col-md-5">
+                        <label class="form-label">{{$lang->data['store_name'] ?? 'Company Name '}}<span class="text-danger"><strong>*</strong></span></label>
                         <input type="text" class="form-control" placeholder="{{$lang->data['enter_store_name'] ?? 'Enter Store Name'}}" wire:model='name'>
                         @error('name')
                             <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
-                    <div class="mb-3 col-md-3">
+                    <div class="mb-3 col-md-5">
+                        <label class="form-label">{{$lang->data['contact_number'] ?? 'CVR No.'}}<span
+                                class="text-danger"><strong>*</strong></span></label>
+                        <input type="text" class="form-control" placeholder="{{$lang->data['enter_contact_number'] ?? 'Enter Contact Number'}}" wire:model='phone'>
+                        @error('phone')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+                    
+                    <div class="mb-3 col-md-2 d-flex align-items-end justify-content-end">
+                        <a wire:click='save' class="btn btn-primary">{{ $lang->data['save_changes'] ?? 'Save Changes' }}</a>
+                    </div>
+                    </div>
+                    <!--<div class="mb-3 col-md-3">
                         <label class="form-label">{{$lang->data['application_logo'] ?? 'Application Logo'}} </label>
                         <input type="file" class="form-control" wire:model='logo'>
                         @error('logo')
@@ -36,14 +49,7 @@
                             <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
-                    <div class="mb-3 col-md-3">
-                        <label class="form-label">{{$lang->data['contact_number'] ?? 'Contact Number'}}<span
-                                class="text-danger"><strong>*</strong></span></label>
-                        <input type="text" class="form-control" placeholder="{{$lang->data['enter_contact_number'] ?? 'Enter Contact Number'}}" wire:model='phone'>
-                        @error('phone')
-                            <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
+                    
                     <div class="mb-3 col-md-3">
                         <label class="form-label">{{$lang->data['email'] ?? 'Email'}}<span class="text-danger"><strong>*</strong></span></label>
                         <input type="email" class="form-control" placeholder="{{$lang->data['enter_email'] ?? 'Enter Email'}}" wire:model='email'>
@@ -69,8 +75,8 @@
                 <div class="mb-3">
                     <label class="form-label">{{$lang->data['address'] ?? 'Address'}}</label>
                     <textarea class="form-control resize-none" rows="4" wire:model='address'></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary float-end" wire:click.prevent='save'>{{$lang->data['save_changes'] ?? 'Save Changes'}}</button>
+                </div>!-->
+                
             </form>
         </div>
     </div>

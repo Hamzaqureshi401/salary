@@ -227,36 +227,146 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="mb-3 col-md-6">
-                            <label class="form-label">{{$lang->data['name']??'Name'}} <span class="text-danger"><strong>*</strong></span></label>
-                            <input type="text" class="form-control" id="inputEmail4" placeholder="{{$lang->data['name']??'Name'}}" wire:model="name">
+                            <label class="form-label">{{$lang->data['name']??'Full Name'}} <span class="text-danger"><strong>*</strong></span></label>
+                            <input type="text" class="form-control" id="inputEmail4"  wire:model="name">
                             @error('name')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="mb-3 col-md-6">
-                            <label class="form-label">{{$lang->data['mobile_number']??'Mobile Number'}}<span
+                            <label class="form-label">{{$lang->data['adres']??'Address'}}<span
                                     class="text-danger"></span></label>
-                            <input type="text" class="form-control" placeholder="{{$lang->data['mobile']??'mobile_no'}}" wire:model="mobile_no">
-                            @error('mobile_no')
+                            <input type="text" class="form-control"  wire:model="adress">
+                            @error('adress')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">{{$lang->data['registraion_date']??'Registration Date'}}</label>
-                        <input type="date" class="form-control"  wire:model="registration_date">
-                        @error('registraion_date')
-                            <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['email']??'Email'}}<span
+                                    class="text-danger"></span></label>
+                            <input type="text" class="form-control"  wire:model="email">
+                            @error('email')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
                     
-                  
+                        </div> 
+                        <div class="mb-3 col-md-6">
+                                <label class="form-label">{{$lang->data['position']??'Position.'}}</label>
+                                <input type="text" class="form-control"  wire:model="position">
+                                @error('position')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                        </div>
+                     </div>
+
+                    <div class="row">
+                       <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['cpr_no']??'CPR No.'}}</label>
+                            <input type="text" class="form-control" wire:model="cpr_no" id="cpr_no_input"placeholder="xxxxxx-xxxx">
+                            @error('cpr_no')
+                                <span class="text-danger">{{"The CPR number must be in the format XXXXXX-XXXX."}}</span>
+                            @enderror
+                            </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['draw_percentage']??'Draw percentage:'}}</label>
+                            <input type="text" class="form-control"  wire:model="draw_percentage">
+                            @error('draw_percentage')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['monthly_deduction']??'Monthly deduction:'}}</label>
+                            <input type="text" class="form-control"  wire:model="monthly_deduction">
+                            @error('monthly_deduction')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                       
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['monthly_deduction']??'Registraion No:'}}</label>
+                            <input type="text" class="form-control"  wire:model="registration_no">
+                            @error('registration_no')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['monthly_deduction']??'Account No:'}}</label>
+                            <input type="text" class="form-control"  wire:model="account_no">
+                            @error('account_no')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{$lang->data['monthly_deduction']??'Bank Name:'}}</label>
+                            <input type="text" class="form-control"  wire:model="bank_name">
+                            @error('bank_name')
+                                <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">Employee Nature</label>
+                            <div class="form-check">
+                            <input class="form-check-input" type="radio" id="nature_monthly" name="working_nature" wire:model="working_nature" value="1" wire:click="debugValue(1)">
+                            <label class="form-check-label" for="nature_monthly">Monthly Fixed Salary</label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="radio" id="nature_hourly" name="working_nature" wire:model="working_nature" value="0" wire:click="debugValue(0)">
+                            <label class="form-check-label" for="nature_hourly">Hourly Basis</label>
+                            </div>
+                            @error('working_nature')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                     @if($working_nature === 1)
+                    <div class="row">
+                            <div id="salary_fields"> 
+                                <div class="mb-3 col-md-6">
+                                <label class="form-label">Monthly Salary</label>
+                                <input type="number" class="form-control" wire:model="monthly_salary">
+                                @error('monthly_salary')
+                                <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">Monthly Hours</label>
+                                <input type="number" class="form-control" wire:model="monthly_hours">
+                                @error('monthly_hours')
+                                <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                            </div>
+                        </div>
+                        @elseif($working_nature === 0)
+                        
+                        <div id="hourly_fields" > <div class="mb-3 col-md-6">
+                            <label class="form-label">Hourly Rate</label>
+                            <input type="number" value="{{$working_nature}}" class="form-control" wire:model="hourly_price">
+                            @error('hourly_price')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                        </div>
+                        @endif
+           
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{$lang->data['close']??'Close'}}</button>
-                    <button type="button" class="btn btn-success" wire:click="update">{{$lang->data['save']??'Save'}}</button>
+                    <button type="button" class="btn btn-success" wire:click="create">{{$lang->data['save']??'Save'}}</button>
                 </div>
             </div>
         </div>
+    
     </div>
 </div>
 

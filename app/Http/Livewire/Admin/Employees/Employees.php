@@ -3,6 +3,7 @@
 
 namespace App\Http\Livewire\Admin\Employees;
 use App\Models\Employee;
+use App\Models\Salarygeneration;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -95,6 +96,13 @@ class Employees extends Component
     /* delete driver data */
     public function delete(Employee $employee)
     {
+        if(Salarygeneration::where('employee_id',$employee->id)->count() > 0)
+        {
+            $this->dispatchBrowserEvent(
+                'alert', ['type' => 'error',  'message' => 'Employee deletion restricted! This Employee has Salary Records in Database']);
+            return 0;
+        }
+       
         $employee->delete();
         $this->employee = null;
         $this->dispatchBrowserEvent(

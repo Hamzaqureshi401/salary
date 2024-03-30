@@ -55,10 +55,7 @@
                             alt="Charles Hall" />
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="{{route('admin.account_settings')}}"><i class="align-middle me-1"
-                                data-feather="user"></i> Account Settings</a>
-                        <a class="dropdown-item" href="{{route('admin.app_settings')}}"><i class="align-middle me-1"
-                                data-feather="settings"></i> App Settings</a>
+                     
                         <a class="dropdown-item" href="#" wire:click="logout">Log out</a>
                     </div>
                 </li>

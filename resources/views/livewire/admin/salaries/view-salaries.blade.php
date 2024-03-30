@@ -47,17 +47,17 @@
                                     @endif
                                 </td>
                                 <td>{{$item->working_hours}}</td>
-                                <td>DKK {{ number_format($item->atp_tax, 2, ',', '.') }}</td>
-                                <td>DKK {{ number_format($item->am_income, 2, ',', '.') }}</td>
-                                <td>DKK {{ number_format($item->am_contributions, 2, ',', '.') }}</td>
-                                <td>DKK {{ number_format($item->a_income, 2, ',', '.') }}</td>
-                                <td>DKK {{ number_format($item->a_tax, 2, ',', '.') }}</td>
-                                <td>DKK {{ number_format($item->driving_allowance, 2, ',', '.') }}</td>
-                                <td>DKK {{ number_format($item->net_salary, 2, ',', '.') }}</td>
+                                <td> {{ number_format($item->atp_tax, 2, ',', '.') }} kr.</td>
+                                <td> {{ number_format($item->am_income, 2, ',', '.') }} kr.</td>
+                                <td> {{ number_format($item->am_contributions, 2, ',', '.') }} kr.</td>
+                                <td> {{ number_format($item->a_income, 2, ',', '.') }} kr.</td>
+                                <td> {{ number_format($item->a_tax, 2, ',', '.') }} kr.</td>
+                                <td> {{ number_format($item->driving_allowance, 2, ',', '.') }} kr.</td>
+                                <td> {{ number_format($item->net_salary, 2, ',', '.') }} kr.</td>
                                 <td>
                                     @if(Auth::user()->can('delete_assigning') && Auth::user()->can('edit_assigning'))
                                         <a href="{{ route('admin.salaries.view', $item->id) }}" class="btn btn-success btn-sm" >{{ $lang->data['delete'] ?? 'Salary Slip' }}</a>
-                                        <a href="{{ route('admin.edit_assigning', $item->id) }}" class="btn btn-sm btn-primary">{{ $lang->data['edit'] ?? 'Edit' }}</a>
+                                        <a href="{{ route('admin.edit_salaries', $item->id) }}" class="btn btn-sm btn-primary">{{ $lang->data['edit'] ?? 'Edit' }}</a>
                                     @endif
                                 </td> 
                             </tr>

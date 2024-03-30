@@ -28,7 +28,7 @@ class ViewSalarygenerations extends Component
     public function salaryslip($sgid)
     {
         $query = Salarygeneration::find($sgid);
-        dump($query);
+        
      
     }
 

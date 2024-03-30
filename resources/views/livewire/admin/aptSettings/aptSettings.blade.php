@@ -28,7 +28,7 @@
                                 <td>{{$item->between39and77hours}}</td>
                                 <td>{{$item->between78and116hours}}</td>
                                 <td>{{$item->morethan117hours}}</td>
-                                <td>Dkk {{$item->da_rate}}</td>
+                                <td> {{$item->da_rate}} kr.</td>
                                 <td>
                                     @if(Auth::user()->can('edit_company'))
                                     <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#EditModalAptSetting" wire:click='edit({{$item}})'>{{$lang->data['edit']??'Edit'}}</a>

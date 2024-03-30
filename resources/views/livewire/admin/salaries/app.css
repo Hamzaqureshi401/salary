@@ -1,0 +1,86 @@
+.salary-slip {
+  margin: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  background-color: #ddd;
+  padding: 10px 0;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.employee-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.employee-info h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.left-side,
+.right-side {
+  width: 45%;
+}
+
+.employee-info table th,
+.employee-info table td {
+  padding: 5px;
+}
+
+.pay-details {
+  margin-top: 20px;
+  text-align: center;
+  background-color: #ddd;
+  padding: 10px 0;	
+}
+
+.pay-details h1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+
+.pay-details h1 span {
+  flex: 1;
+  font-weight: bold;
+}
+
+.pay-details p span {
+  flex: 1;
+}
+
+.net-pay {
+  color: green;
+}
+
+.earnings,
+.deductions {
+  margin-top: 20px;
+}
+
+.earnings table,
+.deductions table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.earnings table th,
+.deductions table th,
+.earnings table td,
+.deductions table td {
+  padding: 5px;
+}
+
+.amount {
+  text-align: right;
+}
