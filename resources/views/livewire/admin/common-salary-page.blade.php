@@ -41,12 +41,7 @@
                         <td>{{ number_format($item->a_tax, 2, ',', '.') }} Kr</td>
                         <td>{{ number_format($item->driving_allowance, 2, ',', '.') }} Kr</td>
                         <td>{{ number_format($item->net_salary, 2, ',', '.') }} Kr</td>
-                        <!--  <td>
-                           @if(Auth::user()->can('delete_assigning') && Auth::user()->can('edit_assigning'))
-                               <a href="{{ route('admin.salaries.view', $item->id) }}" class="btn btn-success btn-sm" >{{ $lang->data['delete'] ?? 'Salary Slip' }}</a>
-                               <a href="{{ route('admin.edit_assigning', $item->id) }}" class="btn btn-sm btn-primary">{{ $lang->data['edit'] ?? 'Edit' }}</a>
-                           @endif
-                            Kr</td>  -->
+                       
                      </tr>
                      @endforeach
                   </tbody>
