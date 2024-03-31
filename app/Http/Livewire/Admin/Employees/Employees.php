@@ -73,6 +73,7 @@ class Employees extends Component
         $this->monthly_deduction = $employee->monthly_deduction;
         $this->email = $employee->email;
         $this->position = $employee->position;
+        $this->working_nature = $employee->working_nature;
 
     }
     /* update driver data */
@@ -82,12 +83,14 @@ class Employees extends Component
             'name'  => 'required',
             
         ]);
+
         $employee = $this->employee;
         $employee->name = $this->name;
-        $employee->	adress = $this->adress;
+        $employee->adress = $this->adress;
         $employee->cpr_no = $this->cpr_no;
         $employee->draw_percentage = $this->draw_percentage;
         $employee->monthly_deduction = $this->monthly_deduction;
+        $employee->working_nature = $this->working_nature ?? 0;
         $employee->save();
         $this->emit('closemodal');
         $this->dispatchBrowserEvent(
